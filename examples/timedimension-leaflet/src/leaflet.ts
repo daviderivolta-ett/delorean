@@ -3,7 +3,6 @@ import style from 'leaflet/dist/leaflet.css?raw'
 
 import { Delorean, TimedimensionComponent, LeafletRasterTimeLayer, type LeafletRasterTimeLayerOptions } from 'timedimension'
 
-
 export class Leaflet extends HTMLElement {
     public shadowRoot: ShadowRoot;
 
