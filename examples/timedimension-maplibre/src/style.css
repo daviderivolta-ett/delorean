@@ -1,0 +1,46 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+app-maplibre {
+  display: block;
+  height: 100dvh;
+}
+
+app-timedimension {
+  position: fixed;
+  z-index: 9;
+  bottom: 16px;
+  left: 16px;
+}
+
+.timedimension {
+  position: fixed;
+  z-index: 9;
+  bottom: 16px;
+  left: 16px;
+}
+
+.btn {
+  position: fixed;
+  z-index: 9;
+  top: 16px;
+  left: 16px;
+}
+
+.add-layer-btn,
+.remove-layer-btn {
+  position: fixed;
+  z-index: 999;
+  left: 16px;
+}
+
+.add-layer-btn {
+  top: 16px;
+}
+
+.remove-layer-btn {
+  top: 48px;
+}
