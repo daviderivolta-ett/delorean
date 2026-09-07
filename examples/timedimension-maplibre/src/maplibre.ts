@@ -1,14 +1,14 @@
 import * as maplibregl from 'maplibre-gl'
 import style from 'maplibre-gl/dist/maplibre-gl.css?raw'
 
-import { Delorean, MaplibreglRasterTimeLayer, TimedimensionComponent, type MaplibreglRasterTimeLayerOptions } from 'timedimension'
+import { Delorean, MaplibreglRasterTimeLayer, DeloreanController, type MaplibreglRasterTimeLayerOptions } from 'timedimension'
 
 export class Maplibre extends HTMLElement {
     public shadowRoot: ShadowRoot;
 
     #map?: maplibregl.Map;
     #delorean?: Delorean;
-    #timedimensionComponent?: TimedimensionComponent;
+    #deloreanController?: DeloreanController;
 
     #layers: Object[] = [];
 
@@ -23,7 +23,7 @@ export class Maplibre extends HTMLElement {
         maplibreStyleSheet.replaceSync(style);
         this.shadowRoot.adoptedStyleSheets.push(maplibreStyleSheet);
 
-        this.#timedimensionComponent = this.shadowRoot.querySelector('#timedimension') as TimedimensionComponent;
+        this.#deloreanController = this.shadowRoot.querySelector('#delorean') as DeloreanController;
     }
 
     #html(): HTMLTemplateElement {
@@ -31,7 +31,7 @@ export class Maplibre extends HTMLElement {
         template.innerHTML =
             `
             <div id="maplibre" class="maplibre"></div>
-            <app-timedimension id="timedimension" class="timedimension"></app-timedimension>
+            <delorean-controller id="delorean" class="delorean-controller"></delorean-controller>
             `
             ;
         return template;
@@ -45,7 +45,7 @@ export class Maplibre extends HTMLElement {
                 height: 100%;
             }
 
-            .timedimension {
+            .delorean-controller {
                 position: fixed;
                 z-index: 999;
                 bottom: 40px;
@@ -78,8 +78,8 @@ export class Maplibre extends HTMLElement {
         /* START EXAMPLE */
         this.#delorean = new Delorean();
         this.#delorean.addTimeChangedCallback((newTime: number) => {
-            if (!this.#map || !this.#timedimensionComponent) return;
-            this.#timedimensionComponent.time = newTime;
+            if (!this.#map || !this.#deloreanController) return;
+            this.#deloreanController.time = newTime;
         });
         /* END EXAMPLE */
     }

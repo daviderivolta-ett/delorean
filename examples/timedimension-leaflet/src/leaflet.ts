@@ -1,14 +1,14 @@
 import * as leaflet from 'leaflet'
 import style from 'leaflet/dist/leaflet.css?raw'
 
-import { Delorean, TimedimensionComponent, LeafletRasterTimeLayer, type LeafletRasterTimeLayerOptions } from 'timedimension'
+import { Delorean, DeloreanController, LeafletRasterTimeLayer, type LeafletRasterTimeLayerOptions } from 'timedimension'
 
 export class Leaflet extends HTMLElement {
     public shadowRoot: ShadowRoot;
 
     #map?: leaflet.Map;
     #delorean?: Delorean;
-    #timedimensionComponent?: TimedimensionComponent;
+    #deloreanController?: DeloreanController;
 
     #layers: Object[] = [];
 
@@ -23,7 +23,7 @@ export class Leaflet extends HTMLElement {
         leafletStylesheet.replaceSync(style);
         this.shadowRoot.adoptedStyleSheets.push(leafletStylesheet);
 
-        this.#timedimensionComponent = this.shadowRoot.querySelector('#timedimension') as TimedimensionComponent;
+        this.#deloreanController = this.shadowRoot.querySelector('#timedimension') as DeloreanController;
     }
 
     #html(): HTMLTemplateElement {
@@ -31,7 +31,7 @@ export class Leaflet extends HTMLElement {
         template.innerHTML =
             `
             <div id="leaflet" class="leaflet"></div>
-            <app-timedimension id="timedimension" class="timedimension"></app-timedimension>
+            <delorean-controller id="timedimension" class="timedimension"></delorean-controller>
             `
             ;
         return template;
@@ -73,8 +73,8 @@ export class Leaflet extends HTMLElement {
         /* START EXAMPLE */
         this.#delorean = new Delorean();
         this.#delorean.addTimeChangedCallback((newTime: number) => {
-            if (!this.#map || !this.#timedimensionComponent) return;
-            this.#timedimensionComponent.time = newTime;
+            if (!this.#map || !this.#deloreanController) return;
+            this.#deloreanController.time = newTime;
         });
         /* END EXAMPLE */
     }

@@ -9,13 +9,6 @@ app-maplibre {
   height: 100dvh;
 }
 
-app-timedimension {
-  position: fixed;
-  z-index: 9;
-  bottom: 16px;
-  left: 16px;
-}
-
 .timedimension {
   position: fixed;
   z-index: 9;

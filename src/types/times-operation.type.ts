@@ -1,1 +1,0 @@
-export type TimesOperation = 'union' | 'intersect' | 'replace';
