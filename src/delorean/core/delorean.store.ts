@@ -7,7 +7,8 @@ export class Delorean {
     #times: number[];
     #currentTimeIndex: number;
     #callbacks: ((newTime: number) => void)[] = [];
-    #intervalId?: number;
+    // #intervalId?: number;
+    #isPlaying: boolean = false;
 
     constructor(defaultTimes: number[] = [], defaultCurrentTime: number = new Date().getTime()) {
         this.#times = [...defaultTimes].toSorted((a, b) => a - b);
@@ -57,7 +58,7 @@ export class Delorean {
         this.timeChanged(this.currentTime);
     }
 
-    public nextTime(loop: boolean = true) {
+    public nextTime(loop: boolean = true) {        
         this.#currentTimeIndex++;
         if (loop) {
             if (this.#currentTimeIndex < 0) this.#currentTimeIndex = this.#times.length - 1;
@@ -80,8 +81,10 @@ export class Delorean {
     }
 
     public togglePlay(isPlaying: boolean, interval: number = 3000): void {
-        if (!isPlaying) clearInterval(this.#intervalId);
-        else this.#intervalId = setInterval(() => this.nextTime(false), interval);
+        // if (!isPlaying) clearInterval(this.#intervalId);
+        // else this.#intervalId = setInterval(() => this.nextTime(false), interval);
+        this.#isPlaying = isPlaying;
+        this.#loop(() => this.nextTime(), interval);
     }
 
     public addTimeChangedCallback(callback: (newTime: number) => void): void {
@@ -94,5 +97,17 @@ export class Delorean {
 
     public timeChanged(newTime: number): void {
         this.#callbacks.forEach((c) => c(newTime));
+    }
+
+    async #loop(callback: Function, ms: number) {
+        while (this.#isPlaying) {
+            await callback();
+            if (!this.#isPlaying) break;
+            await this.#sleep(ms);
+        }
+    }
+
+    #sleep(ms: number) {
+        return new Promise<void>((resolve) => setTimeout(resolve, ms));
     }
 }

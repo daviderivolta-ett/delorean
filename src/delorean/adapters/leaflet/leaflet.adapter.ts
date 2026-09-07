@@ -41,6 +41,7 @@ export class LeafletRasterTimeLayer {
         defaultTime ? this.#delorean.setCurrentTime(defaultTime) : this.#delorean.lastTime();
         this.#timeChangedCallback = (newTime: number) => this.setTime(newTime);
         this.#delorean.addTimeChangedCallback(this.#timeChangedCallback);
+        await new Promise((resolve) => this.layer.once('load', resolve));
         return this;
     }
 
@@ -56,10 +57,18 @@ export class LeafletRasterTimeLayer {
         return getLayerTimes(this.getCapabilitiesUrl, this.layerId);
     }
 
-    public setTime(time: number): this {
-        (this.layer as leaflet.TileLayer.WMS).setParams({
-            time: `${new Date(time).toISOString()}`
-        } as unknown as leaflet.WMSParams)
+    public async setTime(time: number): Promise<this> {
+        const layer = this.layer as leaflet.TileLayer.WMS;
+        const loaded = new Promise<void>((resolve) => {
+            layer.once('load', () => resolve());
+        });
+
+        layer.setParams({
+            time: new Date(time).toISOString()
+        } as unknown as leaflet.WMSParams);
+
+        await loaded;
+        
         return this;
     }
 }

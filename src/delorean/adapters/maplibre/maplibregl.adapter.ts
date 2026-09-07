@@ -48,6 +48,7 @@ export class MaplibreglRasterTimeLayer {
         defaultTime ? this.#delorean.setCurrentTime(defaultTime) : this.#delorean.lastTime();
         this.#timeChangedCallback = (newTime: number) => this.setTime(map, newTime);
         this.#delorean.addTimeChangedCallback(this.#timeChangedCallback);
+        await new Promise((resolve) => map.once('idle', resolve));
         return this;
     }
 
@@ -64,14 +65,20 @@ export class MaplibreglRasterTimeLayer {
         return getLayerTimes(this.getCapabilitiesUrl, this.layerId);
     }
 
-    public setTime(map: maplibregl.Map, time: number): this {
+    public async setTime(map: maplibregl.Map, time: number): Promise<this> {
         if (!map) throw new Error(`Cannot set time: layer "${this.layerId}" is not attached to a map.`);
+
+        const loaded = new Promise<void>((resolve) => {
+            map.once('idle', () => resolve());
+        });
 
         const source = map.getSource(this.sourceId);
         if (!source || source.type !== 'raster') throw new Error(`Raster source "${this.sourceId}" not found.`);
 
         this.#tileUrlParams.set('TIME', `${new Date(time).toISOString()}`);
         if (source instanceof maplibregl.RasterTileSource) source.setTiles([this.#buildTileUrl()]);
+
+        await loaded;
 
         return this;
     }

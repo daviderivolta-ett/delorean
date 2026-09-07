@@ -84,7 +84,7 @@ export class Leaflet extends HTMLElement {
         this.addEventListener('timedimension-prevtime', () => this.#delorean?.prevTime());
         this.addEventListener('timedimension-nexttime', () => this.#delorean?.nextTime());
         this.addEventListener('timedimension-lasttime', () => this.#delorean?.lastTime());
-        this.addEventListener('timedimension-play', (e: Event) => this.#delorean?.togglePlay((e as CustomEvent).detail, 1000));
+        this.addEventListener('timedimension-play', (e: Event) => this.#delorean?.togglePlay((e as CustomEvent).detail, 3000));
     }
 
     public async addWmsTimeLayer(options: LeafletRasterTimeLayerOptions) {
