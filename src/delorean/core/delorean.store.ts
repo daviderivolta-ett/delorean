@@ -7,7 +7,6 @@ export class Delorean {
     #times: number[];
     #currentTimeIndex: number;
     #callbacks: ((newTime: number) => void)[] = [];
-    // #intervalId?: number;
     #isPlaying: boolean = false;
 
     constructor(defaultTimes: number[] = [], defaultCurrentTime: number = new Date().getTime()) {
@@ -81,8 +80,6 @@ export class Delorean {
     }
 
     public togglePlay(isPlaying: boolean, interval: number = 3000): void {
-        // if (!isPlaying) clearInterval(this.#intervalId);
-        // else this.#intervalId = setInterval(() => this.nextTime(false), interval);
         this.#isPlaying = isPlaying;
         this.#loop(() => this.nextTime(), interval);
     }

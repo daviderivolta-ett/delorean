@@ -1,8 +1,14 @@
+/* Dependencies */
 import * as leaflet from 'leaflet'
 import style from 'leaflet/dist/leaflet.css?raw'
 
-import { Delorean, DeloreanController, LeafletRasterTimeLayer, type LeafletRasterTimeLayerOptions } from 'timedimension'
+/* Types */
+import { Delorean, LeafletRasterTimeLayer, type LeafletRasterTimeLayerOptions } from 'delorean'
 
+/* Components */
+import { DeloreanController } from 'delorean'
+
+/* Class */
 export class Leaflet extends HTMLElement {
     public shadowRoot: ShadowRoot;
 
@@ -23,6 +29,9 @@ export class Leaflet extends HTMLElement {
         leafletStylesheet.replaceSync(style);
         this.shadowRoot.adoptedStyleSheets.push(leafletStylesheet);
 
+        /**
+         * Get Delorean controller instance from Shadowroot
+         */
         this.#deloreanController = this.shadowRoot.querySelector('#timedimension') as DeloreanController;
     }
 
@@ -70,16 +79,20 @@ export class Leaflet extends HTMLElement {
             .addLayer(leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'))
 
 
-        /* START EXAMPLE */
+        /**
+         * Update Delorean controller current date UI
+         */
         this.#delorean = new Delorean();
         this.#delorean.addTimeChangedCallback((newTime: number) => {
             if (!this.#map || !this.#deloreanController) return;
             this.#deloreanController.time = newTime;
         });
-        /* END EXAMPLE */
     }
 
     #setup(): void {
+        /**
+         * Connect Delorean controller ui with Delorean store class
+         */
         this.addEventListener('timedimension-firsttime', () => this.#delorean?.firstTime());
         this.addEventListener('timedimension-prevtime', () => this.#delorean?.prevTime());
         this.addEventListener('timedimension-nexttime', () => this.#delorean?.nextTime());
@@ -89,6 +102,10 @@ export class Leaflet extends HTMLElement {
 
     public async addWmsTimeLayer(options: LeafletRasterTimeLayerOptions) {
         if (!this.#map || !this.#delorean) return;
+        /**
+         * Create Leaflet raster layer wrapper
+         * and add to Leaflet map instance
+         */
         const wmsTimeLayer = new LeafletRasterTimeLayer(this.#delorean, options);
         await wmsTimeLayer.addTo(this.#map, 1787196600000, 'intersect');
         this.#layers.push(wmsTimeLayer);
@@ -97,6 +114,9 @@ export class Leaflet extends HTMLElement {
     public removeWmsTimeLayer(layerId: string) {
         const foundLayer = this.#layers.find((l: Object): l is LeafletRasterTimeLayer => l instanceof LeafletRasterTimeLayer && l.layerId === layerId);
         if (!this.#map || !foundLayer) return;
+        /**
+         * Remove Leaflet raster layer wrapper from Leaflet instance map
+         */
         foundLayer.removeFrom(this.#map);
         this.#layers = this.#layers.filter((l) => l instanceof LeafletRasterTimeLayer && l.layerId !== foundLayer.layerId);
     }

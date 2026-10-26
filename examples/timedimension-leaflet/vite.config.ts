@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   resolve: {
     alias: {
-      timedimension: fileURLToPath(
+      delorean: fileURLToPath(
         new URL('../../src', import.meta.url)
       ),
     },

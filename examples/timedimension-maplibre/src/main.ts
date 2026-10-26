@@ -1,16 +1,28 @@
+/* Dependencies */
 import './style.css'
 import './maplibre'
 
+/* Types */
 import type { Maplibre } from './maplibre'
 
+/* Methods */
 main();
 
 function main() {
+    /**
+     * Connect simple ui
+     */
     const maplibre = document.querySelector('#maplibre') as Maplibre;
     const addBtn = document.querySelector('#add-layer') as HTMLButtonElement;
     const removeBtn = document.querySelector('#remove-layer') as HTMLButtonElement;
 
+    /**
+     * Add layer to Maplibre map instance
+     */
     addBtn.onclick = () => maplibre.addWmsTimeLayer(
+        /**
+         * MaplibreRasterTimeLayerOptions object
+         */
         {
             sourceId: 'wms-test-source',
             layerId: 'omirl:tempMean',
@@ -33,5 +45,8 @@ function main() {
         }
     );
 
+    /**
+     * Remove layer from Maplibre map instance
+     */
     removeBtn.onclick = () => maplibre.removeWmsTimeLayer('omirl:tempMean');
 }

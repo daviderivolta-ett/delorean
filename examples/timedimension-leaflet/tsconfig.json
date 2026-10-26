@@ -12,10 +12,10 @@
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
     "paths": {
-      "timedimension": [
+      "delorean": [
         "../../src/index.ts"
       ],
-      "timedimension/*": [
+      "delorean/*": [
         "../../src/*"
       ]
     },
